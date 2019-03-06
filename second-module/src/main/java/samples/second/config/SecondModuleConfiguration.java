@@ -23,7 +23,7 @@ public class SecondModuleConfiguration {
 
     @Bean(name = "secondModuleDataSource")
     @ConfigurationProperties(prefix = "second.datasource")
-    public DataSource firstDatasource() {
+    public DataSource secondDatasource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(env.getProperty("second.datasource.driver-class-name"));
         dataSource.setUrl(env.getProperty("second.datasource.url"));
@@ -39,6 +39,7 @@ public class SecondModuleConfiguration {
         final Flyway flyway = Flyway.configure()
                 .dataSource(driverManagerDataSource)
                 .schemas(driverManagerDataSource.getSchema())
+                .locations("classpath:db.migration.second")
                 .load();
 
         flyway.migrate();

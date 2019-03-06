@@ -43,30 +43,10 @@ public class FirstModuleConfiguration {
         final Flyway flyway = Flyway.configure()
                 .dataSource(driverManagerDataSource)
                 .schemas(driverManagerDataSource.getSchema())
+                .locations("classpath:db.migration.first")
                 .load();
 
         flyway.migrate();
     }
-
-//    @Bean
-//    public FlywayConfigurationCustomizer firstModuleFlywayConfigurationCustomizer(@Qualifier("firstModuleDataSource")DataSource dataSource) {
-//        final DriverManagerDataSource driverManagerDataSource = (DriverManagerDataSource) dataSource;
-//        return configuration -> {
-//            configuration.schemas(driverManagerDataSource.getSchema())
-//                    .dataSource(driverManagerDataSource);
-//        };
-//    }
-
-//    @Bean(name = "firstModuleFlywayMigrationStrategy")
-//    public FlywayMigrationStrategy flywayMigrationStrategy(@Qualifier("firstModuleDataSource") DataSource dataSource) {
-//        final DriverManagerDataSource driverManagerDataSource = (DriverManagerDataSource) dataSource;
-//        return flyway -> {
-//            flyway.setDataSource(driverManagerDataSource);
-//            flyway.setSchemas(
-//                    driverManagerDataSource.getSchema()
-//            );
-//            flyway.migrate();
-//        };
-//    }
 
 }
