@@ -10,14 +10,34 @@ import org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomiz
 import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import samples.first.entities.FirstEntity;
+import samples.first.repositories.FirstEntityRepository;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Properties;
 
+@EnableTransactionManagement
+@EnableJpaRepositories(
+        entityManagerFactoryRef = "firstModuleEntityManagerFactory",
+        transactionManagerRef = "firstModuleTransactionManager",
+        basePackageClasses = {FirstEntityRepository.class}
+)
 @EnableAutoConfiguration(exclude = { FlywayAutoConfiguration.class })
 @Configuration
 public class FirstModuleConfiguration {
@@ -48,5 +68,29 @@ public class FirstModuleConfiguration {
 
         flyway.migrate();
     }
+
+
+    @Bean(name = "firstModuleEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            EntityManagerFactoryBuilder builder,
+            @Qualifier("firstModuleDataSource") DataSource dataSource) {
+        return builder
+                .dataSource(dataSource)
+                .packages("samples.first.entities")
+                .persistenceUnit("firstEntity")
+                .build();
+    }
+
+    @Bean(name = "firstModuleTransactionManager")
+    public PlatformTransactionManager transactionManager(
+            @Qualifier("firstModuleEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
+    }
+
+//    @Bean
+//    public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
+//        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+//    }
+
 
 }
