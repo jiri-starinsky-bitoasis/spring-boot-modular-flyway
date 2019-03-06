@@ -1,0 +1,33 @@
+server:
+  port: 8060
+
+
+spring:
+  jpa:
+    generate-ddl: false
+  # Disable feature detection by this undocumented parameter. Check the org.hibernate.engine.jdbc.internal.JdbcServiceImpl.configure method for more details.
+    properties:
+      hibernate:
+        temp.use_jdbc_metadata_defaults: false
+        hibernate.ddl-auto: validate
+  # Because detection is disabled you have to set correct dialect by hand.
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+
+
+first:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/samples"
+    username: john
+    password: mypassword
+    schema: first_module
+    driver-class-name: org.postgresql.Driver
+
+second:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/samples"
+    username: john
+    password: mypassword
+    schema: second_module
+    driver-class-name: org.postgresql.Driver
+
+

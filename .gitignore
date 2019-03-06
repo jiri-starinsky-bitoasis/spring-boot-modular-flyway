@@ -1,0 +1,9 @@
+# idea IDE
+.idea
+*.iml
+
+# logs
+*.log
+
+# build
+target

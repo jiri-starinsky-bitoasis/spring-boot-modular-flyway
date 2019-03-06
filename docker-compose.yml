@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:9.6
+    stop_grace_period: 30s
+    environment:
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_USER: john
+      POSTGRES_DB: samples
+    ports:
+      - "5432:5432"
+
+
